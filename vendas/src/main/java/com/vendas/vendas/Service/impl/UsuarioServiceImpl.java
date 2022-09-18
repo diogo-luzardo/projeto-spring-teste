@@ -1,6 +1,7 @@
 package com.vendas.vendas.Service.impl;
 
 import com.vendas.vendas.entity.Usuario;
+import com.vendas.vendas.excepetion.SenhaInvalidaException;
 import com.vendas.vendas.jpaRepository.Usuarios;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -17,11 +18,23 @@ import org.springframework.transaction.annotation.Transactional;
 public class UsuarioServiceImpl implements UserDetailsService {
 
     @Autowired
+    private PasswordEncoder encoder;
+    @Autowired
     private Usuarios repository;
 
     @Transactional
     public Usuario salvar(Usuario usuario){
         return repository.save(usuario);
+    }
+
+    public UserDetails autenticar (Usuario usuario){
+        UserDetails usuarioDetails = loadUserByUsername(usuario.getNome());
+        boolean matches = encoder.matches(usuario.getSenha(), usuarioDetails.getPassword());
+
+        if(matches){
+            return usuarioDetails;
+        }
+        throw new SenhaInvalidaException();
     }
 
     @Override

@@ -22,11 +22,9 @@ public class Usuario {
     public Usuario() {
     }
 
-    public Usuario(Integer id, String nome, String senha, boolean admin) {
-        this.id = id;
+    public Usuario(String nome, String senha) {
         this.nome = nome;
         this.senha = senha;
-        this.admin = admin;
     }
 
     public Integer getId() {
